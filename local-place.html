@@ -1,0 +1,365 @@
+
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet"
+          href="https://www.google.com/cse/style/look/default.css" type="text/css">
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?libraries=places">
+    </script>
+    <script type="text/javascript">	
+	var postcode,latsess,lonsess,sess2save;
+	function transfer()
+{
+////////////////SESSION LOCAL STORAGE
+{
+
+
+var sessionToStore = JSON.stringify(sess2save);//necessary before storage 
+
+
+if (typeof(Storage) != "undefined") {
+    // Store
+    window.sessionStorage.setItem("getlocationsessstoreto",sessionToStore);//already jsonified
+    window.sessionStorage.setItem("postcodesessstoreto", JSON.stringify(postcode));
+    window.sessionStorage.setItem("latsessstoreto", JSON.stringify(latsess));
+    window.sessionStorage.setItem("lonsessstoreto", JSON.stringify(lonsess));
+    // Retrieve
+    //window.sessionStorage.getItem("getlocationsessstore");
+} else {
+    document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
+}
+
+
+}
+//////////////////////////////////////store location in session "from"
+//store location in session "from"
+
+window.location.href = "bookingpage.html";
+}
+	
+      var map;
+      var places;
+      var iw;
+      var markers = [];
+	  var latLng;
+
+      function initialize() {
+       if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(success); 
+  } else{
+  error('GeoLocation is not Supported');
+  
+}
+	 
+	   
+      }
+
+function success(position)
+  {
+	latLng = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+	var options = {
+          zoom: 12,
+          center: new google.maps.LatLng(latLng.k,latLng.B),
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          streetViewControl: false
+        };
+        var mapCanvas = document.getElementById('map_canvas');
+        map = new google.maps.Map(mapCanvas, options);
+        places = new google.maps.places.PlacesService(map);   
+	
+  }
+
+
+      function updateKeyword(event) {
+        updateRankByCheckbox();
+        blockEvent(event);
+      }
+
+      function blockEvent(event) {
+        if (event.which == 13) {
+          event.cancelBubble = true;
+          event.returnValue = false;
+        }
+      }
+
+      function updateRankByCheckbox() {
+        var types = getTypes();
+        var keyword = document.controls.keyword.value;
+        var disabled = !types.length && !keyword;
+        var label = document.getElementById('rankbylabel');
+        label.style.color = disabled ? '#cccccc' : '#333';
+        document.controls.rankbydistance.disabled = disabled;
+      }
+
+      function getTypes() {
+        var types = []
+        for (var i = 0; i < document.controls.type.length; i++) {
+          if (document.controls.type[i].checked) {
+            types.push(document.controls.type[i].value);
+          }
+        }
+        return types;
+      }
+
+      function search(event) {
+        if (event) {
+          event.cancelBubble = true;
+          event.returnValue = false;
+        }
+
+        var search = {};
+
+        // Set desired types.
+        var types = getTypes();
+        if (types.length) {
+          search.types = types;
+        }
+
+        // Set keyword.
+        var keyword = document.controls.keyword.value;
+        if (keyword) {
+          search.keyword = keyword;
+        }
+
+        // Set ranking.
+        if (!document.controls.rankbydistance.disabled &&
+            document.controls.rankbydistance.checked) {
+          search.rankBy = google.maps.places.RankBy.DISTANCE;
+          search.location = map.getCenter();
+        } else {
+          search.rankBy = google.maps.places.RankBy.PROMINENCE;
+          search.bounds = map.getBounds()
+        }
+
+        // Search.
+        places.search(search, function(results, status) {
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            clearResults();
+            clearMarkers();
+            for (var i = 0; i < results.length; i++) {
+              var letter = String.fromCharCode(65 + i);
+              markers[i] = new google.maps.Marker({
+                position: results[i].geometry.location,
+                animation: google.maps.Animation.DROP,
+                icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker' +
+                    letter + '.png'
+              });
+              google.maps.event.addListener(
+                  markers[i], 'click', getDetails(results[i], i));
+              dropMarker(markers[i], i * 100);
+              addResult(results[i], i);
+            }
+          }
+        });
+      }
+
+      function clearMarkers() {
+        for (var i = 0; i < markers.length; i++) {
+          if (markers[i]) {
+            markers[i].setMap(null);
+            delete markers[i]
+
+          }
+        }
+      }
+
+      function dropMarker(marker, delay) {
+        window.setTimeout(function() {
+          marker.setMap(map);
+        }, delay);
+      }
+
+      function addResult(result, i) {
+        var results = document.getElementById('results');
+        var tr = document.createElement('tr');
+        tr.style.backgroundColor = i % 2 == 0 ? '#F0F0F0' : '#FFFFFF';
+        tr.onclick = function() {
+          google.maps.event.trigger(markers[i], 'click');
+        };
+
+        var iconTd = document.createElement('td');
+        var nameTd = document.createElement('td');
+        var icon = document.createElement('img');
+        icon.src = result.icon;
+        icon.className = 'placeIcon';
+        var name = document.createTextNode(result.name);
+        iconTd.appendChild(icon);
+        nameTd.appendChild(name);
+        tr.appendChild(iconTd);
+        tr.appendChild(nameTd);
+        results.appendChild(tr);
+      }
+
+      function clearResults() {
+        var results = document.getElementById('results');
+        while (results.childNodes[0]) {
+          results.removeChild(results.childNodes[0]);
+        }
+      }
+
+      function getDetails(result, i) {
+        return function() {
+          places.getDetails({
+            reference: result.reference
+          }, showInfoWindow(i));
+        }
+      }
+
+      function showInfoWindow(i) {
+        return function(place, status) {
+          if (iw) {
+            iw.close();
+            iw = null;
+          }
+
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+            iw = new google.maps.InfoWindow({
+              content: getIWContent(place)
+            });
+            iw.open(map, markers[i]);
+          }
+        }
+      }
+
+      function getIWContent(place) {
+		  
+		/////////////////////
+		
+		sess2save=place.formatted_address;	//address
+		postcode=place.address_components[4].long_name;//postcode
+		latsess=place.geometry.location.B;//lat
+		lonsess=place.geometry.location.k;//lon
+		 transfer();
+		////////////////////  
+        var content = '<table style="border:0"><tr><td style="border:0;">';
+        content += '<img class="placeIcon" src="' + place.icon + '"></td>';
+        content += '<td style="border:0;"><b><a href="' + place.url + '">';
+        content += place.name + '</a></b>';
+        content += '</td></tr></table>';
+        return content;
+		
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+	<script>
+function goBack() {
+    window.history.back()
+}
+</script>
+	<style type="text/css">
+
+      #container {
+        margin-top: 6px;
+        margin-left: 6px
+      }
+
+      #map_canvas {
+        width: 100%;
+        height: 406px;
+		margin:20px auto;     
+		-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+
+		}
+
+      #listing {
+		  margin:20px auto;
+        width: 100%;
+        height: auto;
+        overflow: auto;
+        cursor: pointer;
+		-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+
+      }
+
+      #controls {
+        padding: 5px;
+      }
+      .placeIcon {
+        width: 16px;
+        height: 16px;
+        margin: 2px 15px 2px 2px;
+      }
+
+      #results {
+        border-collapse: collapse;
+        width: 100%;
+		
+      }
+    </style>
+
+</head>
+<body onLoad="initialize()">
+<div class="wrap">
+	<!-- start grids_of_3 -->
+	<div class="grids_of_3">
+        		<div class="grid1_of_3 left">
+			<div class="btn_style bg">
+            <div class="buttons" style="width:40px; float:right;margin: -6px 4px 0 0;">
+<button class="bg2" onclick="goBack()"><img src="images/back.png" style="width:25px; height: 13px;" /></button></div>
+<div class="buttons" style="width:40px; float:left;margin: -6px 0 0 4px;">
+<a href="index.html"><button class="bg2"><img src="images/home.png" style="width:25px; height:13px;" /></button></a></div>
+				<h4>Local Place</h4>
+			</div>
+			<div class="login_form">
+            <form name="controls">
+          <div style="margin-top: 5px"> Keyword:</div>
+          <div style="margin-left: 9px;">
+          <input id="keyword" type="text" onkeyup="updateKeyword(event)"onkeydown="blockEvent(event)" style="width:110px">
+          </div>
+          <div style="margin-top: 5px">Types:</div>
+          <div style="margin-left: 9px">
+            <input style="visibility: inherit !important;" type="checkbox" name="type" value="store"
+                   onclick="updateRankByCheckbox()" /> store<br/>
+            <input style="visibility: inherit !important;" type="checkbox" name="type" value="clothing_store"
+                   onclick="updateRankByCheckbox()" /> clothing_store<br/>
+            <input style="visibility: inherit !important;" type="checkbox" name="type" value="restaurant"
+                   onclick="updateRankByCheckbox()" /> restaurant<br>
+            <input style="visibility: inherit !important;" type="checkbox" name="type" value="lodging"
+                   onclick="updateRankByCheckbox()" /> lodging<br>
+            <input style="visibility: inherit !important;" type="checkbox" name="type" value="museum"
+                   onclick="updateRankByCheckbox()" /> museum<br>
+          </div>
+          <div id="rankbylabel" style="margin-top: 5px; color: #cccccc">
+            <input style="visibility: inherit !important;" type="checkbox" disabled="true"
+                   name="rankbydistance" /> Rank by distance
+          </div>
+        </form>
+            <div class="buttons">
+				<button class="bg2" type="button" value="Search" onclick="search(event)" />Get Place</button>
+			</div>
+<div id="map_canvas" style="height:300px !important;"></div>
+    <div id="listing">
+      <table id="results"></table>
+    </div>          
+                <div style="clear:both;"></div>
+
+			</div>
+			<div class="soc_icons">
+				<ul>
+					<li><a class="icon_1" href="#"></a></li>
+					<li><a class="icon_2" href="#"></a></li>
+					<li><a class="icon_3" href="#"></a></li>
+					<li><a class="icon_4" href="#"></a></li>
+				</ul>	
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+</body>
+</html>

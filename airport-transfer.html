@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>    
+	<script>
+
+fare={};
+KT1={lhr:24 ,lgw:36 ,ltn:80 ,std:90 ,lcy:50};
+fare.KT1=KT1;
+KT2={lhr:25 ,lgw:40 ,ltn:80 ,std:90 ,lcy:50};
+fare.KT2=KT2;
+KT3={lhr:25 ,lgw:33 ,ltn:78 ,std:85 ,lcy:47};
+fare.KT3=KT3;
+KT4={lhr:28 ,lgw:30 ,ltn:80 ,std:85 ,lcy:45};
+fare.KT4=KT4;
+KT5={lhr:25 ,lgw:36 ,ltn:80 ,std:90 ,lcy:48};
+fare.KT5=KT5;
+KT6={lhr:25 ,lgw:36 ,ltn:80 ,std:90 ,lcy:48};
+fare.KT6=KT6;
+KT7={lhr:25 ,lgw:36 ,ltn:80 ,std:90 ,lcy:50};
+fare.KT7=KT7;
+KT8={lhr:24 ,lgw:40 ,ltn:80 ,std:90 ,lcy:52};
+fare.KT8=KT8;
+KT9={lhr:25 ,lgw:34 ,ltn:80 ,std:90 ,lcy:50};
+fare.KT9=KT9;
+KT17={lhr:30 ,lgw:30 ,ltn:80 ,std:85 ,lcy:50};
+fare.KT17=KT17;
+KT18={lhr:37 ,lgw:26 ,ltn:80 ,std:85 ,lcy:52};
+fare.KT18=KT18;
+KT19={lhr:28 ,lgw:28 ,ltn:80 ,std:85 ,lcy:54};
+fare.KT19=KT19;
+KT20={lhr:40 ,lgw:25 ,ltn:90 ,std:95 ,lcy:55};
+fare.KT20=KT20;
+KT21={lhr:38 ,lgw:26 ,ltn:90 ,std:95 ,lcy:55};
+fare.KT21=KT21;
+TW10={lhr:22 ,lgw:48 ,ltn:75 ,std:85 ,lcy:50};
+fare.TW10=TW10;
+TW11={lhr:23 ,lgw:46 ,ltn:75 ,std:75 ,lcy:48};
+fare.TW11=TW11;
+TW12={lhr:23 ,lgw:46 ,ltn:75 ,std:85 ,lcy:52};
+fare.TW12=TW12;
+SM1={lhr:34 ,lgw:28 ,ltn:80 ,std:85 ,lcy:46};
+fare.SM1=SM1;
+SM2={lhr:32 ,lgw:26 ,ltn:80 ,std:85 ,lcy:46};
+fare.SM2=SM2;
+SM3={lhr:32 ,lgw:28 ,ltn:80 ,std:85 ,lcy:47};
+fare.SM3=SM3;
+SM4={lhr:32 ,lgw:32 ,ltn:75 ,std:80 ,lcy:48};
+fare.SM4=SM4;
+SM5={lhr:34 ,lgw:27 ,ltn:80 ,std:85 ,lcy:50};
+fare.SM5=SM5;
+SM6={lhr:36 ,lgw:28 ,ltn:85 ,std:90 ,lcy:58};
+fare.SM6=SM6;
+
+//if(typeof fare[postcode][airport]) //undefined
+//alert("please contact the office for quote")
+</script>
+    <script>
+// This example displays an address form, using the autocomplete feature
+// of the Google Places API to help users fill in the information.
+var istringval="";
+var costofjourney;
+var myfare;
+var mypost;
+var placeSearch, autocomplete;
+var componentForm = {
+  street_number: 'short_name',
+  route: 'long_name',
+  locality: 'long_name',
+  administrative_area_level_1: 'short_name',
+  country: 'long_name',
+  postal_code: 'short_name'
+};
+
+function initialize() {
+  // Create the autocomplete object, restricting the search
+  // to geographical location types.
+  autocomplete = new google.maps.places.Autocomplete(
+      /** @type {HTMLInputElement} */(document.getElementById('autocomplete')),
+      { types: ['geocode'] });
+  // When the user selects an address from the dropdown,
+  // populate the address fields in the form.
+  google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    fillInAddress();
+  });
+}
+
+// [START region_fillform]
+function fillInAddress() {
+  // Get the place details from the autocomplete object.
+  var place = autocomplete.getPlace();
+//
+//  for (var component in componentForm) {
+//    document.getElementById(component).value = '';
+//    document.getElementById(component).disabled = false;
+//  }
+
+place.address_components.forEach(function(entry){
+   if(entry.types=="postal_code"){
+    postcode=entry["long_name"].split(" ");
+  }
+ });
+ mypost=postcode[0];
+  // Get each component of the address from the place details
+  // and fill the corresponding field on the form.
+  for (var i = 0; i < place.address_components.length; i++) {
+    var addressType = place.address_components[i].types[0];
+    if (componentForm[addressType]) {
+      var val = place.address_components[i][componentForm[addressType]];
+    }
+  }
+}
+// [END region_fillform]
+
+// [START region_geolocation]
+// Bias the autocomplete object to the user's geographical location,
+// as supplied by the browser's 'navigator.geolocation' object.
+function geolocate() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var geolocation = new google.maps.LatLng(
+          position.coords.latitude, position.coords.longitude);
+      autocomplete.setBounds(new google.maps.LatLngBounds(geolocation,
+          geolocation));
+    });
+  }
+}
+// [END region_geolocation]
+    </script>
+  
+<script>
+function goBack() {
+    window.history.back()
+}
+
+function calcRoute(){
+var selectaport;
+var select = document.getElementById('myairport');
+var tyt=select.selectedIndex;
+switch(tyt) {
+    case 0:
+	 case 1:
+	  case 2:
+	   case 3:
+        selectaport="lhr";
+		if (typeof fare[mypost]=== 'undefined') {
+			alert("Please contact");
+			return;
+		}
+		myfare=fare[mypost][selectaport];
+		
+		break;
+		 case 4:
+        selectaport="lhr";
+		myfare=fare[mypost][selectaport];
+		myfare +=2;
+		break;
+    case 5:
+	case 6:
+		selectaport="lgw";
+		myfare=fare[mypost][selectaport];
+		break;
+	case 7:
+	    selectaport="ltn";
+		myfare=fare[mypost][selectaport];
+		break;
+	case 8:
+	    selectaport="std";
+		myfare=fare[mypost][selectaport];
+		break;
+	case 9:
+	    selectaport="lcy";
+		myfare=fare[mypost][selectaport];
+		break;		
+    default:
+        
+}
+
+////////////////////////
+  costofjourney=myfare;
+   var costofestate =  costofjourney+5; //£5 on the top
+  var costofmpv = costofjourney*1.5; //fare and a half
+  var costofexecutive= costofjourney*1.8; //80% more than normal
+ // var Costofwaitnreturn= costofjourney*1.5;
+  //optionval=parseInt(document.getElementById('vehicletype').selectedIndex);redundant code
+  var optionval=document.getElementById('vehicletype').selectedIndex;
+//    var img = document.createElement("IMG");
+  vehicleclass=optionval;
+  switch( optionval)
+ {
+case 0:
+  istringval = "Cost is £"+ costofjourney.toFixed(2);
+  //  img = "images/SALOON.png";
+ break;
+case 1:
+ istringval = "Cost is £"+ costofestate.toFixed(2);
+ 
+ // img= "images/ESTATE.png";
+ break;
+case 2:
+  istringval ="Cost is £"+ costofexecutive.toFixed(2);
+ 
+//  img = "images/EXECUTIVE.png";
+break;
+case 3:
+ istringval ="Cost is £"+ costofmpv.toFixed(2);
+ 
+ //  img = "images/MPV.png";
+
+break;
+default:{}
+
+
+
+}
+
+
+
+
+////////////////////////
+document.getElementById('myfarediv').innerHTML=istringval;
+}
+</script>
+
+</head>
+<body onload="initialize()">
+<div class="wrap">
+<!-- start grids_of_3 -->
+<div class="grids_of_3">
+<div class="grid1_of_3 left">
+<div class="btn_style bg">
+<div class="buttons" style="width:40px; float:right;margin: -6px 4px 0 0;">
+<button class="bg2" onclick="goBack()"><img src="images/back.png" style="width:25px; height: 13px;" /></button></div>
+<div class="buttons" style="width:40px; float:left;margin: -6px 0 0 4px;">
+<a href="index.html"><button class="bg2"><img src="images/home.png" style="width:25px; height:13px;" /></button></a></div>
+<h4>Airport Transfer</h4>
+</div>
+<div class="login_form">
+<div id="locationField">
+<input id="autocomplete" style="width:92% !important;" placeholder="Enter your address"onFocus="geolocate()" type="text"></input>
+<button type="submit" style="margin: 6px 0 0 -37px;height: 30px;width: 39px;border: none;background: none;clear: right;float: left;"/><a title="Get Location" href="map.html"><img src="images/localsearch.png"/></a></button>
+</div><br>
+<div class="solid" style="border-bottom:solid 1px; color:#FF9B04; margin:28px 0 -21px 0;"></div>
+<div class="selectuu" style="margin-top: 30px;"><img src="images/ariportimg.png"/><select name="myairportname" id="myairport" onclick="calcRoute();">
+<option value="Heathrow">Heathrow Terminal 1 TW6 1JS</option>
+<option value="Heathrow">Heathrow Terminal 2 TW6 1JS</option>
+<option value="Heathrow">Heathrow Terminal 3 TW6 1JS</option>
+<option value="Heathrow">Heathrow Terminal 4 TW6 2GA</option>
+<option value="Heathrow">Heathrow Terminal 5 TW7 2GA</option>
+<option value="GATWICK">GATWICK AIRPORT NORTH RH6 0PJ</option>
+<option value="GATWICK">GATWICK SOUTH RH6 0PJ</option>
+<option value="LUTON">LUTON AIRPORT LU2 9LY</option>
+<option value="Stansted">Stansted Airport CM24 1QW</option>
+<option value="LONDON CITY">LONDON CITY AIRPORT E16 2PB</option>
+</select></div><br>
+<div class="solid" style="border-bottom:solid 1px; color:#FF9B04; margin:-14px 0 17px 0;"></div>
+<div class="select"><img src="images/vehicle.png"/><select name="select" id="vehicletype" onclick="calcRoute();">
+<option value="Saloon Car">Saloon Car</option>
+<option value="Estate Car">Estate Car</option>
+<option value="Executive Car">Executive Car</option>
+<option value="MPV Car">MPV Car</option>
+</select></div>
+<div class="solid" style="border-bottom:solid 1px; color:#FF9B04; margin:7px 0 17px 0;"></div>
+<div id="myfarediv" style="text-align:center; margin-bottom:20px; margin-top:20px; color:#CA7000;"></div>
+<div class="buttons">
+<button class="bg2" onclick="cleanup()">Booking Confirm</button>
+</div><br>
+</div>
+<div class="soc_icons">
+<ul>
+<li><a class="icon_1" href="#"></a></li>
+<li><a class="icon_2" href="#"></a></li>
+<li><a class="icon_3" href="#"></a></li>
+<li><a class="icon_4" href="#"></a></li>
+</ul>	
+</div>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+</body>
+</html>

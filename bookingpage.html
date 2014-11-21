@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+<script src='lib/shred.bundle.js' type='text/javascript'></script>
+  <script src='lib/swagger.js' type='text/javascript'></script>
+  <script src='lib/sdk-init.js' type='text/javascript'></script>
+<script type="text/javascript" src="js/scars.js"></script>
+<script>
+function goBack() {
+    window.history.back()
+}
+</script>
+</head>
+<body onload="initialize()">
+<div class="wrap">
+<!-- start grids_of_3 -->
+<div class="grids_of_3">
+<div class="grid1_of_3 left">
+<div class="btn_style bg">
+<div class="buttons" style="width:40px; float:right;margin: -6px 4px 0 0;">
+<button class="bg2" onclick="goBack()"><img title="Back" src="images/back.png" style="width:25px; height: 13px;" /></button></div>
+<div class="buttons" style="width:40px; float:left;margin: -6px 0 0 4px;">
+<a href="index.html"><button class="bg2"><img title="Home" src="images/home.png" style="width:25px; height:13px;" /></button></a></div>
+<h4>Booking</h4>
+</div>
+<div class="login_form">
+<div id="locationField">
+<div class="buttons">
+<!--<button class="bg2" id="repeatbk" onclick="myRepeatBooking()">Repeat Booking</button>
+<button class="bg2" style="width: 40px;height: 40px;padding: 5px; margin:0;" onclick="mylocation()"><img src="images/geoimg.png"/></button>
+--><!--<button class="bg2" onclick="myplaces()">Get Place</button>
+--></div>
+<!--<div class="solid" style="border-bottom:solid 1px; color:#FF9B04; margin:20px 0 10px 0;"></div>
+<input id="telme" type="text" placeholder="Enter your mobile or landline">
+<input id="emailme" type="text" placeholder="Enter your email">-->
+<div class="solid" style="border-bottom:solid 1px; color:#FF9B04; margin:-3px 0 -3px 0;"></div>
+<div style="width: 40px;height: 9px; float:left;" class="myCheck"><img style="width:20px; margin-left: 25px;margin-top: -5px;" title="Add" src="images/swap.png"/><input type="checkbox" value="None" id="myCheck" name="check" onchange="asaphidemanual()"/>
+<label for="myCheck"></label></div>
+
+<div style="width:40px;height: 9px; float:right;" class="myreturn"><img style="width:21px; margin-left: 25px;margin-top: -5px;" title="Add" src="images/asap.png"/><input type="checkbox" id="myreturn" onchange="myreturnfn()">
+<label for="myreturn"></label></div>
+
+<!--<div class="button" style="width:30px; float:right; margin:-50px 30px 0 0;"><div style="width:60px;" class="myreturn"><button class="bg2"><input type="checkbox" id="myreturn" onchange="myreturnfn()"><img style="width:20px; margin-left:7px;" title="Add" src="images/asap.png"/></button>
+<label for="myreturn"></label></div></div>-->
+<!--not all browsers support datetime-->
+<div class="dt" style=" clear:left;">
+<input type="date" id="medate">
+<input type="time" id="metime"></div>
+<!--<select id="GetRepeatBooking" onClick="selectbookingintonfrom();">
+</select>-->
+<div class="solid" style="border-bottom:solid 1px; color:#FF9B04; margin:-3px 0 5px 0;"></div>
+<input id="autocomplete" placeholder="From" onFocus="geolocate()" type="text" onChange="sanitychk()">
+<button type="submit" style="margin: 6px 0 0 -37px;height: 30px;width: 39px;border: none;background: none;clear: right;float: left;"/><a title="Get Location" href="#" onClick="mylocation()"><img src="images/geoimg.png"/></a></button>
+<div class="button" style="width: 37px; float: right;margin: -7px 0 0 8px;"><button class="bg2" onclick="favfromlocalstorage()"><img title="Save Favorites" src="images/frompic.png"/></button></div></input>
+<!--<div class="button" style="float:left;margin:5px 14px 15px 0;"><button class="bg1" onclick="favfromlocalstorage()"><img src="images/savez.png" style="height:30px; width:80px; float:right;"/></button></div>
+<div class="button" style="float:left;margin:5px 14px 15px 0;"><button class="bg1" id="gff" onclick="populatefavsfrom();"><img src="images/getfev.png" style="height:30px; width:80px; float:right;"/></button></div>
+<div class="button" style="float:left; margin:5px 2px 15px 0;"><button class="bg1" id="dff" onclick="delfavfromlocalstoragefrom()"><img src="images/hello.png" style="height:30px; width:80px; float:right;"/></button></div>
+<select id="GetFavouritebackfrom"  onClick="selectfavputinfrom();"></select>-->
+<div class="solid" style="border-bottom:solid 1px; color:#FF9B04; margin:50px 0 15px 0"></div>
+<span style="clear:both; margin: 0 0 -35px 0;">Via:</span><div id="viazz"><div onClick="showvia()" class="button" style="width: 30px; float: left;margin: 1px 0 0 35px;"><button class="bg2"><a href="javascript:addElement();" ><img title="Add" src="images/add.png"/></a></button></div> <div id="remove11" class="button" style="width: 30px; float: left;margin: 1px 0 0 30px; display:none;"><button class="bg2"><a href="javascript:removeElement();" ><img title="Remove" src="images/remove.png"/></a></button></div></div>
+<div id="content"></div>
+<div class="solid" style="border-bottom:solid 1px; color:#FF9B04; margin:10px 0 5px 0; clear: both;"></div>
+<input id="autocomplete1" onChange="sanitychk()" placeholder="To" type="text">
+<button type="submit" style="margin: 6px 0 0 -37px;height: 30px;width: 39px;border: none;background: none;clear: right;float: left;"/><a title="Local Search" href="#" onClick="myplace()"><img src="images/localsearch.png"/></a></button>
+<div class="button" style="width: 37px; float: right;margin: -7px 0 0 8px;"><button class="bg2" onclick="favfromlocalstorage()"><img title="Save Favorites" src="images/frompic.png"/></button></div></input>
+<!--<div class="button" style="float:left;margin:5px 14px 15px 0;"><button class="bg1" onclick="favfromlocalstorage()"><img src="images/savez.png" style="height:30px; width:80px; float:right;"/></button></div>
+<div class="button" style="float:left;margin:5px 14px 15px 0;"><button class="bg1" id="gft" onclick="populatefavsto();"><img src="images/getfev.png" style="height:30px; width:80px; float:right;"/></button></div>
+<div class="button" style="float:left; margin:5px 2px 15px 0;"><button class="bg1" id="dft" onclick="delfavfromlocalstorageto()"><img src="images/hello.png" style="height:30px; width:80px; float:right;"/></button></div>
+<select id="GetFavouritebackto" onClick="selectfavputinto();">
+</select>-->
+<div class="solid" style="border-bottom:solid 1px; color:#FF9B04; margin:51px 0 10px 0; clear: both;"></div>
+</div>
+<div id="directions_panel"></div>
+<span>Vehicle:</span>
+<div class="select" style="margin-top:18px !important;"><img title="Vehicle" src="images/vehicle.png"/><select name="select" id="vehicletype" onclick="calcRoute();">
+<option value="Saloon Car">Saloon</option>
+<option value="Estate Car">Estate Car</option>
+<option value="Executive Car">Executive Car</option>
+<option value="MPV Car">MPV Car</option>
+</select></div>
+<div id="total"></div>	
+<div class="buttons" style="margin: -15px 0 -22px 0 !important;">
+<!--      <button class="bg2" onclick="calcRoute()">Get Quote</button>
+-->      <button class="bg2" onclick="cleanup()">Booking Confirm</button><br></div>
+<div class="buttons" style="margin: -15px 0 -22px 0 !important;">
+<button class="bg2" onclick="noteme()">Driver Note</button><br></div>
+</div>
+<div class="soc_icons">
+<ul>
+<li><a class="icon_1" href="#"></a></li>
+<li><a class="icon_2" href="#"></a></li>
+<li><a class="icon_3" href="#"></a></li>
+<li><a class="icon_4" href="#"></a></li>
+</ul>	
+</div>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+    <script type="text/javascript">window.app = {};
+function createdf()
+{
+  
+////////////////    
+//activebooking;
+//[1403109126000, "07947771751", "i@i.com",Array[2], "5.00", 1]
+
+//////////
+//creating record
+var item1 = JSON.parse(window.localStorage.curactivebooking);//converting it back to array of objects 
+item1["flag"]=0;//for despatch table
+item1["curstatus"]="scars_custapp_tot";//customer booked it
+var item={ "record":[item1]};
+//var item = {"record":[{"name":"New Item","complete":false}]};
+        window.df.apis.localmongo.createRecords({"table_name":"scarscollection", "body":item}, function(response) {
+            //document.getElementById("post-results").innerHTML = "Your booking reference is"+JSON.stringify(response.record[0]._id);
+	    //alert("Your booking reference is"+JSON.stringify(response.record[0]._id));
+	     alert("Your booking reference is:"+jobref);
+             }, crudError);
+
+             }
+
+//reference is returned in response.record[0]._id
+/////////////////////////////////
+//getting is working
+//window.df.apis.localmongo.getRecords({table_name: "scarscollection"}, function (response) {
+ //         //Do something with the data;
+ //           console.log(response);
+ //       });
+//
+//
+//remember that database accepts OBJECTS not JSONIFIED STRING
+//response for creating records is record id;
+///////////////////////////////////////////////////////////
+//if human readable index is required then we can do 
+//getrecords and increase it and append it as a value 
+
+function crudError(response) {
+
+    if (response.status == 401 || response.status == 403) {
+        doLogInDialog();
+    } else {
+        alert(getErrorString(response));
+    }
+}
+
+
+////////////////////////////////////////////////////////////
+        (function() {
+            var method;
+            var noop = function () {};
+            var methods = [
+                'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+                'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+                'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+                'timeStamp', 'trace', 'warn'
+            ];
+            var length = methods.length;
+            var console = (window.console = window.console || {});
+
+            while (length--) {
+                method = methods[length];
+
+                // Only stub undefined methods.
+                if (!console[method]) {
+                    console[method] = noop;
+                }
+            }
+        }());
+    </script>
+
+</body>
+</html>

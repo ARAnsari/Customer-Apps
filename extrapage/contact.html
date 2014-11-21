@@ -1,0 +1,104 @@
+
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Contact</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(
+hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+<script src="js/Chart.js"></script>
+
+</head>
+<body>
+<div class="wrap">
+	<!-- start grids_of_3 -->
+	<div class="grids_of_3">
+        		<div class="grid1_of_3 left">
+			<div class="btn_style bg">
+				<h4>Booking</h4>
+			</div>
+			<div class="login_form">
+				<form>
+                            <span class="top">First Name*:</span>
+							<input type="text" name="name" value="" placeholder="" class="required" id="name" />
+                            <span class="top">Email*:</span>
+							<input type="text" name="email" value="" placeholder="" id="email" />
+                            <span class="top">Phone*:</span>
+							<input type="text" name="phone" value="" placeholder="" class="required" id="phone"  />
+                            <span class="top">Pickup:</span>
+							<input type="text" name="autocompletestart" value="" placeholder="" id="autocompletestart" />
+                            <span class="top">Via:</span>
+							<input type="text" name="1" value="" placeholder="" id="1" />
+                            <span class="top">Dropoff:</span>
+							<input type="text" name="autocompleteend" value="" placeholder="" id="autocompleteend" />
+                            <span class="top">Time:</span>
+                            <input type="time" name="time" id="time" value="" >
+                            <span class="top">Date:</span>
+                            <input type="date" name="date" id="date" value="" >
+							<span class="top">vehicle:</span>
+							<input type="text" name="vehicle" value="" placeholder="" id="vehicle" />
+							<span class="top">Fare:</span>
+							<input type="text" name="fare" value="" placeholder="" id="fare" />
+                            <span class="top">Message*:</span>
+							<textarea name="message" id="message" placeholder="" class="required"></textarea>
+				</form>
+				<div class="buttons">
+				<button class="bg2" id="calculate" type="button" value="Get a Quote" onclick="calcRoute();">Get A Quote</button>
+			</div>
+			</div>
+			<div class="soc_icons">
+				<ul>
+					<li><a class="icon_1" href="#"></a></li>
+					<li><a class="icon_2" href="#"></a></li>
+					<li><a class="icon_3" href="#"></a></li>
+					<li><a class="icon_4" href="#"></a></li>
+				</ul>	
+			</div>
+		</div>
+		<div class="clear"></div>
+	<div class="copy">
+		<p class="link">© All rights reserved | Template by&nbsp;<a href="http://w3layouts.com/"> W3Layouts</a></p>
+	</div>
+	</div>
+</div>
+        <SCRIPT LANGUAGE="javascript"> 
+
+var queryStringToJSON = function (url) {
+    if (url === '')
+        return '';
+    var pairs = (url || location.search).slice(1).split('&');
+    var result = {};
+    for (var idx in pairs) {
+        var pair = pairs[idx].split('=');
+        if (!!pair[0])
+            result[pair[0].toLowerCase()] = decodeURIComponent(pair[1] || '');
+    }
+    return result;
+}
+var params=queryStringToJSON();
+
+document.getElementById('autocompletestart').value +=params.v0.replace(/\+/g, " ");
+document.getElementById('autocompleteend').value +=params.v1.replace(/\+/g, " ");
+document.getElementById('vehicle').value +=params.v2.replace(/\+/g, " ");
+document.getElementById('fare').value +=params.v3.replace(/\+/g, " ");
+document.getElementById('1').value +=params.v4.replace(/\+/g, " ");
+counter =params.vc;
+for(i=0; i<intTextBox; i++)
+{
+	
+	}
+
+
+
+</SCRIPT>
+</body>
+</html>

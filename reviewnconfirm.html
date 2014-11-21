@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<textarea id="post-results" rows="4" cols="50">Connecting to Server</textarea>
+
+<script src='lib/shred.bundle.js' type='text/javascript'></script>
+<script src='lib/swagger.js' type='text/javascript'></script>
+<script src='lib/sdk-init.js' type='text/javascript'></script>
+<script src='app.js' type='text/javascript'></script>
+<script type="text/javascript">
+        (function() {
+            var method;
+            var noop = function () {};
+            var methods = [
+                'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+                'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+                'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+                'timeStamp', 'trace', 'warn'
+            ];
+            var length = methods.length;
+            var console = (window.console = window.console || {});
+
+            while (length--) {
+                method = methods[length];
+
+                // Only stub undefined methods.
+                if (!console[method]) {
+                    console[method] = noop;
+                }
+            }
+        }());
+    </script>
+</body>
+</html>
